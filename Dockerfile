@@ -13,12 +13,21 @@
 
 FROM selenium/standalone-chrome
 
-RUN sudo mkdir /project && sudo chown seluser:seluser /project
+user root
 
-RUN sudo apt-get update && sudo apt-get install -y curl maven
-RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && sudo apt-get install -y nodejs
+RUN mkdir /project && chown seluser:seluser /project
+
+RUN apt-get update && apt-get install -y curl maven
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y nodejs
+
+user seluser
 
 VOLUME ["/project"]
+
+#====================================
+# Scripts to run Selenium Standalone
+#====================================
+COPY entry_point.sh /opt/bin/entry_point.sh
 
 EXPOSE 4444
 
