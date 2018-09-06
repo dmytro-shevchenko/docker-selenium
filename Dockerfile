@@ -15,20 +15,29 @@ FROM selenium/standalone-chrome
 
 user root
 
-RUN mkdir /project && chown seluser:seluser /project
 
 RUN apt-get update && apt-get install -y curl maven net-tools openssh-server openjdk-8-jdk
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y nodejs
+
 RUN adduser jenkins
-RUN mkdir /var/run/sshd && update-rc.d ssh enable
 
-user seluser
+# SSH
+RUN echo 'root:password' | chpasswd
+RUN mkdir /var/run/sshd /root/.ssh
+RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 
-#VOLUME ["/project"]
+# CLEAN
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY entry_point.sh /opt/bin/entry_point.sh
 
+#RUN mkdir /project && chown seluser:seluser /project
+#VOLUME ["/project"]
+
+user seluser
+
 EXPOSE 4444 22
 
-CMD ["/opt/bin/entry_point.sh"] 
+CMD ["/opt/bin/entry_point.sh"]
 
