@@ -18,9 +18,6 @@ rm -f /tmp/.X*lock
 xvfb-run -a --server-args="-screen 0 $GEOMETRY -ac +extension RANDR" \
   java ${JAVA_OPTS} -jar /opt/selenium/selenium-server-standalone.jar \
   ${SE_OPTS} &
-
-cd /project/frontend/src/main/feeservice/e2e
-npm run protractorQa &
 NODE_PID=$!
 
 trap shutdown SIGTERM SIGINT

@@ -17,14 +17,18 @@ user root
 
 RUN mkdir /project && chown seluser:seluser /project
 
-RUN apt-get update && apt-get install -y curl maven
+RUN apt-get update && apt-get install -y curl maven net-tools openssh-server openjdk-8-jdk
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y nodejs
+RUN adduser jenkins
+RUN mkdir /var/run/sshd && update-rc.d ssh enable
 
 user seluser
 
-VOLUME ["/project"]
+#VOLUME ["/project"]
 
 COPY entry_point.sh /opt/bin/entry_point.sh
 
-EXPOSE 4444
+EXPOSE 4444 22
+
+CMD ["/opt/bin/entry_point.sh"] 
 

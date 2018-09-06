@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t qa .
+docker build -t dmytroshevchenko/qa .
