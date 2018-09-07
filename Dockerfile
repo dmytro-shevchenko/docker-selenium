@@ -32,8 +32,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY entry_point.sh /opt/bin/entry_point.sh
 
-#RUN mkdir /project && chown seluser:seluser /project
-#VOLUME ["/project"]
+RUN mkdir /project && chown seluser:seluser /project
+VOLUME ["/project"]
 
 user seluser
 
