@@ -23,7 +23,7 @@ RUN adduser jenkins
 
 # SSH
 RUN echo 'root:password' | chpasswd
-RUN mkdir /var/run/sshd /root/.ssh
+RUN mkdir /var/run/sshd /root/.ssh && chmod 700 /root/.ssh
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 
