@@ -2,8 +2,6 @@
 #
 # IMPORTANT: Change this file only in directory Standalone!
 
-sudo /usr/sbin/sshd
-
 export GEOMETRY="$SCREEN_WIDTH""x""$SCREEN_HEIGHT""x""$SCREEN_DEPTH"
 
 function shutdown {
