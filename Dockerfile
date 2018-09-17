@@ -15,17 +15,23 @@ FROM selenium/standalone-chrome
 
 user root
 
-RUN apt-get update && apt-get install -y curl maven openjdk-8-jdk
+RUN apt-get update && apt-get install -y curl maven net-tools openssh-server openjdk-8-jdk git chromium-chromedriver 
+RUN mkdir /apps &&\
+    ln -s /usr/bin /apps/
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y nodejs
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY entry_point.sh /opt/bin/entry_point.sh
+RUN echo 'root:password' | chpasswd
+RUN mkdir /root/.ssh 
+RUN chmod 700 /root/.ssh
+RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config &&\
+    sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config &&\
+    mkdir -p /var/run/sshd
 
-RUN mkdir /project
-VOLUME ["/project"]
+RUN groupadd -g 91255 jenkins
+RUN useradd -u 40679 -g 91255 -m -d /home/jenkins -s /bin/bash jenkins &&\
+echo "jenkins:jenkins" | chpasswd
 
-user seluser
+RUN apt-get clean && rm -rf /var/lib/apt/lists/ /tmp/ /var/tmp/*
+EXPOSE 22
+CMD ["/bin/bash", "-l", "-c", "/usr/sbin/sshd -D"]
 
-EXPOSE 4444
-
-CMD ["/opt/bin/entry_point.sh"]
